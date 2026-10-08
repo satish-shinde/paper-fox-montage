@@ -118,43 +118,46 @@ function drawOcean(progress) {
 
   const waveX = 480 - progress * 720;
   const waveH = 320 + sin(renderTime * 8) * 35;
-  brush.set('marker2', '#8dc8f6', 1.4);
-  brush.noFill();
-  brush.arc(waveX, seaTop - 40, 580, waveH, PI, TWO_PI);
+  noFill();
+  stroke('#8dc8f6');
+  strokeWeight(6);
+  arc(waveX, seaTop - 40, 580, waveH, PI, TWO_PI);
 }
 
 function drawDoors(progress) {
+  rectMode(CENTER);
   for (let i = 0; i < 8; i++) {
     const z = (i + progress * 6) % 8;
     const depth = map(z, 0, 8, 1.2, 0.35);
     const x = sin(i * 1.7 + renderTime * 1.2) * 600 * depth;
     const y = cos(i * 1.1 + renderTime * 1.7) * 260 * depth;
-    brush.set('HB', '#d6ceb7', 0.8 * depth + 0.2);
-    brush.noFill();
-    brush.rect(x, y, 140 * depth, 230 * depth, 'center');
+    noFill();
+    stroke('#d6ceb7');
+    strokeWeight(2.2 * depth);
+    rect(x, y, 140 * depth, 230 * depth);
   }
-  const openP = smoothstep(0.52, 1, progress);
-  brush.fill(color(207, 168, 91, 120 * openP));
-  brush.noStroke();
-  brush.rect(420, -40, 210 * openP, 340 * openP, 'center');
+  const openP = smoothInterp(0.52, 1, progress);
+  noStroke();
+  fill(207, 168, 91, 120 * openP);
+  rect(420, -40, 210 * openP, 340 * openP);
 }
 
 function drawDesertCat(progress) {
-  brush.fill('#c8ab74', 150);
-  brush.noStroke();
-  brush.rect(0, 170, WIDTH, HEIGHT);
+  noStroke();
+  fill('#c8ab74');
+  rectMode(CENTER);
+  rect(0, 170, WIDTH, HEIGHT);
 
   push();
   translate(0, 80 + sin(renderTime * 1.5) * 18);
-  brush.fill('#d8bf8d', 160);
-  brush.noStroke();
-  brush.ellipse(0, 220, 1300, 520);
-  brush.fill('#b68f57', 120);
-  brush.ellipse(-300, 130, 260, 160);
-  brush.ellipse(310, 120, 260, 160);
-  const yawn = smoothstep(0.45, 1, progress);
-  brush.fill(color(135, 102, 71, 170));
-  brush.ellipse(40, 240, 180 + yawn * 250, 60 + yawn * 170);
+  fill('#d8bf8d');
+  ellipse(0, 220, 1300, 520);
+  fill('#b68f57');
+  ellipse(-300, 130, 260, 160);
+  ellipse(310, 120, 260, 160);
+  const yawn = smoothInterp(0.45, 1, progress);
+  fill(135, 102, 71, 170);
+  ellipse(40, 240, 180 + yawn * 250, 60 + yawn * 170);
   pop();
 
   for (let i = 0; i < 220; i++) {
@@ -175,11 +178,11 @@ function drawSpace(progress) {
     brush.circle(x, y, 2 + (i % 3));
   }
 
-  const holeP = smoothstep(0.58, 1, progress);
+  const holeP = smoothInterp(0.58, 1, progress);
   if (holeP > 0) {
     brush.noFill();
     for (let i = 0; i < 7; i++) {
-      brush.set('marker2', color(20 + i * 11, 15, 44 + i * 18, 120), 1.2 - i * 0.12);
+      brush.set('marker', color(20 + i * 11, 15, 44 + i * 18, 120), 1.2 - i * 0.12);
       brush.circle(260, -20, 130 + i * 45 + holeP * 150);
     }
   }
@@ -225,7 +228,7 @@ function drawConstellation(progress) {
   for (let i = 0; i < particles; i++) {
     const tx = map(i, 0, particles - 1, -360, 360);
     const ty = sin(i * 0.12) * 180 + cos(i * 0.09) * 90;
-    const p = smoothstep(0, 1, progress);
+    const p = smoothInterp(0, 1, progress);
     const x = lerp(random(-WIDTH / 2, WIDTH / 2), tx, p);
     const y = lerp(random(-HEIGHT / 2, HEIGHT / 2), ty, p);
     brush.set('2H', color(214, 224, 255, 110 + p * 145), 0.18 + p * 0.35);
@@ -239,7 +242,7 @@ function drawConstellation(progress) {
   }
 }
 
-function smoothstep(a, b, x) {
+function smoothInterp(a, b, x) {
   const t = constrain((x - a) / (b - a), 0, 1);
   return t * t * (3 - 2 * t);
 }
@@ -282,9 +285,9 @@ function sceneDraw(t) {
     drawOcean(p);
     const bx = -220 + p * 210;
     const by = 180 + sin(t * 6) * 20;
-    brush.fill('#e7d8b9', 130);
-    brush.noStroke();
-    brush.triangle(bx - 90, by + 26, bx + 90, by + 26, bx, by - 44);
+    noStroke();
+    fill('#e7d8b9');
+    triangle(bx - 90, by + 26, bx + 90, by + 26, bx, by - 44);
     drawFox(bx - 8, by - 35, 0.62, -0.2, 0.2, 0);
     return;
   }
@@ -403,8 +406,6 @@ function setup() {
 
 function draw() {
   const t = constrain(renderTime, 0, DURATION);
-  resetMatrix();
-  translate(-WIDTH / 2, -HEIGHT / 2);
   sceneDraw(t);
 }
 

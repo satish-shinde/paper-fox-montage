@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const { chromium } = require('playwright');
+const ffmpegPath = require('ffmpeg-static');
+const ffprobeStatic = require('ffprobe-static');
 
 const ROOT = path.resolve(__dirname, '..');
 const OUT = path.join(ROOT, 'outputs');
@@ -20,7 +22,7 @@ function ensureCleanDir(dir) {
 }
 
 function runFfmpeg(args, label) {
-  const result = spawnSync('ffmpeg', args, { stdio: 'inherit' });
+  const result = spawnSync(ffmpegPath, args, { stdio: 'inherit' });
   if (result.status !== 0) {
     throw new Error(`${label} failed with exit code ${result.status}`);
   }
@@ -119,7 +121,7 @@ function encodeVideo() {
 }
 
 function probe(filePath) {
-  const probeResult = spawnSync('ffprobe', [
+  const probeResult = spawnSync(ffprobeStatic.path, [
     '-v',
     'error',
     '-show_entries',

@@ -15,6 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ffmpeg-static": "^5.3.0",
+    "ffprobe-static": "^3.1.0",
     "p5": "^2.3.4",
     "p5.brush": "^2.2.3",
     "playwright": "^1.64.0"
