@@ -13,6 +13,7 @@ const FOX_BASE = [
 ];
 
 let renderTime = 0;
+window.__paperFoxReady = false;
 
 function easeInOut(t) {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
@@ -402,6 +403,7 @@ function setup() {
   brush.load();
   brush.scaleBrushes(2.2);
   noLoop();
+  window.__paperFoxReady = true;
 }
 
 function draw() {
@@ -410,6 +412,10 @@ function draw() {
 }
 
 window.renderAtTime = (seconds) => {
+  if (!window.__paperFoxReady) {
+    return false;
+  }
   renderTime = seconds;
   redraw();
+  return true;
 };

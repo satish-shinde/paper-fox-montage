@@ -33,16 +33,25 @@ async function renderFrames() {
 
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT } });
+  let pageError = null;
+  page.on('pageerror', (error) => {
+    pageError = error;
+  });
 
   const htmlPath = `file://${path.join(ROOT, 'public', 'index.html')}`;
   await page.goto(htmlPath, { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => typeof window.renderAtTime === 'function');
+  await page.waitForFunction(() => typeof window.renderAtTime === 'function' && window.__paperFoxReady === true);
 
   for (let i = 0; i < TOTAL_FRAMES; i += 1) {
+    if (pageError) {
+      throw pageError;
+    }
+
     const t = i / FPS;
-    await page.evaluate((timeSec) => {
-      window.renderAtTime(timeSec);
-    }, t);
+    const rendered = await page.evaluate((timeSec) => window.renderAtTime(timeSec), t);
+    if (!rendered) {
+      throw new Error('Render page was not ready when rendering frame');
+    }
 
     const fileName = `frame_${String(i).padStart(4, '0')}.png`;
     const target = path.join(FRAMES_DIR, fileName);
