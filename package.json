@@ -1,0 +1,21 @@
+{
+  "name": "paper-fox-montage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/satish-shinde/paper-fox-montage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "p5": "^2.3.4",
+    "p5.brush": "^2.2.3",
+    "playwright": "^1.64.0"
+  }
+}
