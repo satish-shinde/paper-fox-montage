@@ -1,0 +1,4 @@
+node_modules/
+outputs/frames/
+outputs/*.m4a
+outputs/*-no-audio.mp4
